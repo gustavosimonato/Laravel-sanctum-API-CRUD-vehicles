@@ -3,22 +3,21 @@
 namespace App\Services;
 
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Throwable;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class AuthService
 {
     /**
      * @param array $data
-     * @return JsonResponse
+     * @return array
+     * @throws Throwable
      */
-    public function register(array $data): JsonResponse
+    public function register(array $data): array
     {
         try {
             DB::beginTransaction();
@@ -33,25 +32,20 @@ class AuthService
 
             DB::commit();
 
-            return response()->json([
-                'message' => 'User registered successfully',
-                'token' => $token,
-            ], Response::HTTP_CREATED);
-        } catch (Throwable $th) {
+            return ['token' => $token];
+        } catch (Throwable $throw) {
             DB::rollBack();
-
-            return response()->json(
-                ['error' => 'Failed to register user.'],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+            throw $throw;
         }
     }
 
     /**
      * @param array $credentials
-     * @return JsonResponse
+     * @return array
+     * @throws Throwable
+     * @throws ValidationException
      */
-    public function login(array $credentials): JsonResponse
+    public function login(array $credentials): array
     {
         try {
             DB::beginTransaction();
@@ -71,44 +65,31 @@ class AuthService
 
             DB::commit();
 
-            return response()->json(
-                ['token' => $token],
-                Response::HTTP_OK
-            );
-        } catch (Throwable $th) {
+            return ['token' => $token];
+        } catch (Throwable $throw) {
             DB::rollBack();
-
-            return response()->json(
-                ['error' => 'Failed to login.'],
-                Response::HTTP_UNAUTHORIZED
-            );
+            throw $throw;
         }
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
+     * @param Authenticatable $user
+     * @return string[]
+     * @throws Throwable
      */
-    public function logout(Request $request): JsonResponse
+    public function logout(Authenticatable $user): array
     {
         try {
             DB::beginTransaction();
 
-            $request->user()->currentAccessToken()->delete();
+            $user->currentAccessToken()->delete();
 
             DB::commit();
 
-            return response()->json(
-                ['message' => 'Successfully logged out'],
-                Response::HTTP_OK
-            );
-        } catch (Throwable $th) {
+            return ['message' => 'Successfully logged out'];
+        } catch (\Throwable $throw) {
             DB::rollBack();
-
-            return response()->json(
-                ['error' => 'Failed to logout.'],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+            throw $throw;
         }
     }
 }

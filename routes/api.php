@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::controller(AuthController::class)->group(function () {
+    Route::post('login', 'login');
+    Route::post('/register', 'register');
+});
 
-//Route::middleware('auth:sanctum')->group(function () {
-//    Route::resource('vehicle', VehicleController::class);
-//});
+Route::group(['middleware' => ['auth:sanctum']], function () {
+
+    Route::delete('logout', [AuthController::class, 'logout']);
+
+    Route::resource('vehicles', VehicleController::class);
+});
