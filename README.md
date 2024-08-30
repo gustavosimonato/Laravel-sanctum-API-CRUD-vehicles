@@ -1,6 +1,6 @@
 # CRUD de Gerenciamento de Frota de Veículos
 
-Este projeto é um CRUD (Create, Read, Update, Delete) desenvolvido em Laravel com o Laravel Sanctum para gerenciar uma frota de veículos.
+Este projeto é um CRUD (Create, Read, Update, Delete) desenvolvido em Laravel para gerenciar uma frota de veículos.
 
 ## Instalação e Configuração
 
