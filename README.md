@@ -50,7 +50,4 @@ php artisan key:generate
 ./vendor/bin/sail artisan migrate
 ```
 
-8. Inicie o server:
-```
-./vendor/bin/sail artisan serve
-```
+Sistema rodando em http://127.0.0.1:80
