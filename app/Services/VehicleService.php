@@ -11,12 +11,8 @@ class VehicleService
 {
     public function getAllVehiclesByUser()
     {
-        try {
-            $vehicles = Vehicle::where('user_id', Auth::id())->get();
-            return $vehicles;
-        } catch (Throwable $throw) {
-            throw $throw;
-        }
+        $vehicles = Vehicle::where('user_id', Auth::id())->get();
+        return $vehicles;
     }
 
     public function createVehicle(array $vehicleData)
@@ -48,12 +44,8 @@ class VehicleService
 
     public function getVehicleById($id)
     {
-        try {
-            $vehicle = Vehicle::findOrFail($id);
-            return $vehicle;
-        } catch (Throwable $throw) {
-            throw $throw;
-        }
+        $vehicle = Vehicle::findOrFail($id);
+        return $vehicle;
     }
 
     public function updateVehicle($id, array $vehicleData)

@@ -21,61 +21,32 @@ class VehicleController extends Controller
 
     public function index(): JsonResponse
     {
-        try {
-            $vehicles = $this->vehicleService->getAllVehiclesByUser();
-            return response()->json($vehicles, Response::HTTP_OK);
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'Internal server error',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $vehicles = $this->vehicleService->getAllVehiclesByUser();
+        return response()->json($vehicles, Response::HTTP_OK);
     }
 
     public function store(VehicleCreateRequest $request): JsonResponse
     {
-        try {
-            $vehicle = $this->vehicleService->createVehicle($request->validated());
-            return response()->json($vehicle, Response::HTTP_CREATED);
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'Internal server error',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $vehicle = $this->vehicleService->createVehicle($request->validated());
+        return response()->json($vehicle, Response::HTTP_CREATED);
     }
 
     public function show($id): JsonResponse
     {
-        try {
-            $vehicle = $this->vehicleService->getVehicleById($id);
-            return response()->json($vehicle, Response::HTTP_OK);
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'Internal server error',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $vehicle = $this->vehicleService->getVehicleById($id);
+        return response()->json($vehicle, Response::HTTP_OK);
     }
 
     public function update(VehicleCreateRequest $request, $id): JsonResponse
     {
-        try {
-            $vehicle = $this->vehicleService->updateVehicle($id, $request->validated());
-            return response()->json($vehicle, Response::HTTP_OK);
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'Internal server error',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $vehicle = $this->vehicleService->updateVehicle($id, $request->validated());
+        return response()->json($vehicle, Response::HTTP_OK);
+
     }
 
     public function destroy($id): JsonResponse
     {
-        try {
-            $this->vehicleService->deleteVehicle($id);
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'Internal server error',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $this->vehicleService->deleteVehicle($id);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

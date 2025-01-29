@@ -22,44 +22,25 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        try {
-            $data = $this->authService->register($request->validated());
+        $data = $this->authService->register($request->validated());
 
-            return response()->json([
-                'message' => 'User registered successfully',
-                'token' => $data['token'],
-            ], Response::HTTP_CREATED);
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'Internal server error',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'message' => 'User registered successfully',
+            'token' => $data['token'],
+        ], Response::HTTP_CREATED);
+
     }
 
     public function login(LoginRequest $request): JsonResponse
     {
-        try {
-            $data = $this->authService->login($request->validated());
-
-            return response()->json($data, Response::HTTP_OK);
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => 'Internal server error',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $data = $this->authService->login($request->validated());
+        return response()->json($data, Response::HTTP_OK);
     }
 
     public function logout(Request $request): JsonResponse
     {
-        try {
-            $data = $this->authService->logout($request->user());
-
-            return response()->json($data, Response::HTTP_OK);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'error' => 'Internal server error',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $data = $this->authService->logout($request->user());
+        return response()->json($data, Response::HTTP_OK);
     }
 
 }
