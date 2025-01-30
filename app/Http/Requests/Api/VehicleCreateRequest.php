@@ -2,12 +2,18 @@
 
 namespace App\Http\Requests\Api;
 
-use Illuminate\Contracts\Validation\Validator;
+use App\Support\Traits\HandlesFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class VehicleCreateRequest extends FormRequest
 {
+    use HandlesFailedValidation;
+
+    public function authorize()
+    {
+        return true;
+    }
+
     public function rules()
     {
         return [
@@ -41,15 +47,5 @@ class VehicleCreateRequest extends FormRequest
             'color.max' => 'O campo cor não pode ter mais de :max caracteres.',
             'plate.max' => 'O campo placa não pode ter mais de :max caracteres.',
         ];
-    }
-
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'message' => 'Validation errors',
-            'data' => $validator->errors()
-        ], 417));
     }
 }

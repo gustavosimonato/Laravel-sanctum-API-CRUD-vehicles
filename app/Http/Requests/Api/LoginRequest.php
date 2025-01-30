@@ -2,27 +2,18 @@
 
 namespace App\Http\Requests\Api;
 
-use Illuminate\Contracts\Validation\Validator;
+use App\Support\Traits\HandlesFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class LoginRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+    use HandlesFailedValidation;
+
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
     public function rules()
     {
         return [
@@ -31,12 +22,14 @@ class LoginRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
+    public function messages()
     {
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'message' => 'Validation errors',
-            'data' => $validator->errors()
-        ], 417));
+        return [
+            'email.required' => 'O campo email é obrigatório.',
+            'email.string' => 'O campo email deve ser uma string.',
+            'email.email' => 'O campo email deve ser um email válido.',
+            'password.required' => 'O campo senha é obrigatório.',
+            'password.string' => 'O campo senha deve ser uma string.'
+        ];
     }
 }
